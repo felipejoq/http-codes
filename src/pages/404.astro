@@ -1,0 +1,60 @@
+---
+export const prerender = true;
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getHTTPCode } from '../data/http-codes';
+
+const title = '404 — Page Not Found | HTTP Echo';
+const description = 'The page you are looking for could not be found.';
+
+const code404 = getHTTPCode(404);
+---
+
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+  
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 text-center">
+    <div class="w-32 h-32 rounded-2xl bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 flex items-center justify-center mx-auto mb-8">
+      <span class="text-6xl font-bold text-orange-600 dark:text-orange-400">404</span>
+    </div>
+    
+    <h1 class="text-4xl font-bold mb-4">Page Not Found</h1>
+    
+    {code404 && (
+      <div class="prose dark:prose-invert prose-lg max-w-md mx-auto mb-8">
+        <p>{code404.description}</p>
+      </div>
+    )}
+    
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a 
+        href="/"
+        class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-colors flex items-center gap-2"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+        Go Home
+      </a>
+      <a 
+        href="/codes"
+        class="px-6 py-3 border border-[var(--color-border)] hover:bg-[var(--color-card)] font-medium rounded-xl transition-colors flex items-center gap-2"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+        Browse Codes
+      </a>
+    </div>
+    
+    <!-- Easter Egg -->
+    <div class="mt-16 p-6 rounded-xl bg-[var(--color-card)] border border-[var(--color-border)] inline-block">
+      <p class="text-sm text-[var(--color-muted)] mb-2">Want to test a real 404?</p>
+      <code class="text-sm font-mono bg-[var(--color-bg)] px-3 py-1.5 rounded">curl https://http.uncodigo.com/http/404</code>
+    </div>
+  </div>
+  
+  <Footer slot="footer" />
+</BaseLayout>

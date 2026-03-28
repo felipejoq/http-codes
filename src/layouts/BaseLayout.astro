@@ -1,0 +1,88 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+}
+
+const { 
+  title, 
+  description = 'Complete HTTP Status Code reference and testing API. Learn about every HTTP status code and test them with our free API.',
+  image = '/og-image.png',
+  canonical
+} = Astro.props;
+
+const siteUrl = 'https://http.uncodigo.com';
+const canonicalUrl = canonical || `${siteUrl}${Astro.url.pathname}`;
+const fullImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="generator" content={Astro.generator} />
+  
+  <!-- Primary Meta Tags -->
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content="HTTP Echo" />
+  <link rel="canonical" href={canonicalUrl} />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={fullImage} />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content={canonicalUrl} />
+  <meta property="twitter:title" content={title} />
+  <meta property="twitter:description" content={description} />
+  <meta property="twitter:image" content={fullImage} />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  
+  <!-- Theme detection -->
+  <script is:inline>
+    (function() {
+      const theme = localStorage.getItem('theme') || 
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    })();
+  </script>
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "HTTP Echo",
+    "url": siteUrl,
+    "description": description,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${siteUrl}/codes?q={search_term_string}`,
+      "query-input": "required name=search_term_string"
+    }
+  })} />
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+  <slot name="header" />
+  
+  <main class="flex-1">
+    <slot />
+  </main>
+  
+  <slot name="footer" />
+  
+  <!-- Toast container -->
+  <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
+</body>
+</html>

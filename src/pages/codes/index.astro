@@ -1,0 +1,129 @@
+---
+export const prerender = true;
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import CodeCard from '../../components/CodeCard.astro';
+import SearchBar from '../../components/SearchBar.astro';
+import { httpCodes, categoryConfig, type HTTPCategory } from '../../data/http-codes';
+
+const title = 'HTTP Status Codes — Complete List | HTTP Echo';
+const description = 'Browse all HTTP status codes organized by category. From 1xx Informational to 5xx Server Errors, with detailed explanations and examples.';
+
+const categories: HTTPCategory[] = ['informational', 'success', 'redirection', 'client_error', 'server_error'];
+
+const codesByCategory = categories.map(category => ({
+  category,
+  codes: httpCodes.filter(c => c.category === category)
+}));
+---
+
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+  
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumbs -->
+    <nav class="flex items-center gap-2 text-sm text-[var(--color-muted)] mb-6">
+      <a href="/" class="hover:text-[var(--color-text)] transition-colors">Home</a>
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      <span class="text-[var(--color-text)]">Codes</span>
+    </nav>
+    
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">HTTP Status Codes</h1>
+      <p class="text-[var(--color-muted)] max-w-2xl">
+        Complete list of all HTTP status codes organized by category. 
+        Click on any code to learn more or test it with our API.
+      </p>
+    </div>
+    
+    <!-- Search -->
+    <div class="max-w-xl mb-8">
+      <SearchBar id="codes-search" placeholder="Search by code, name, or description..." />
+    </div>
+    
+    <!-- Categories -->
+    <div class="space-y-12">
+      {codesByCategory.map(({ category, codes }) => {
+        const config = categoryConfig[category];
+        return (
+          <section id={category} class="scroll-mt-24">
+            <div class="flex items-center gap-3 mb-6">
+              <div class={`w-10 h-10 rounded-lg ${config.bgColor} ${config.borderColor} border flex items-center justify-center text-xl`}>
+                {config.icon}
+              </div>
+              <div>
+                <h2 class="text-xl font-bold">{config.label}</h2>
+                <p class="text-sm text-[var(--color-muted)]">{codes.length} codes</p>
+              </div>
+            </div>
+            
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 codes-grid" data-category={category}>
+              {codes.map(code => (
+                <div class="code-item" data-search={`${code.code} ${code.name} ${code.description}`.toLowerCase()}>
+                  <CodeCard code={code} />
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+    
+    <!-- No results message -->
+    <div id="no-results" class="hidden text-center py-12">
+      <div class="w-16 h-16 rounded-full bg-[var(--color-card)] flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-[var(--color-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold mb-2">No codes found</h3>
+      <p class="text-[var(--color-muted)]">Try a different search term</p>
+    </div>
+  </div>
+  
+  <Footer slot="footer" />
+</BaseLayout>
+
+<script>
+  // Client-side search
+  document.addEventListener('codes:search', ((e: CustomEvent) => {
+    const query = e.detail.query.toLowerCase();
+    const items = document.querySelectorAll('.code-item');
+    const sections = document.querySelectorAll('section[id]');
+    const noResults = document.getElementById('no-results');
+    let visibleCount = 0;
+    
+    items.forEach(item => {
+      const searchData = item.getAttribute('data-search') || '';
+      const isMatch = searchData.includes(query);
+      (item as HTMLElement).style.display = isMatch ? '' : 'none';
+      if (isMatch) visibleCount++;
+    });
+    
+    // Hide empty sections
+    sections.forEach(section => {
+      const visibleItems = section.querySelectorAll('.code-item:not([style*="none"])');
+      (section as HTMLElement).style.display = visibleItems.length > 0 ? '' : 'none';
+    });
+    
+    if (noResults) {
+      noResults.classList.toggle('hidden', visibleCount > 0);
+    }
+  }) as EventListener);
+  
+  // Handle URL query parameter
+  const params = new URLSearchParams(window.location.search);
+  const query = params.get('q');
+  if (query) {
+    const searchInput = document.getElementById('codes-search') as HTMLInputElement;
+    if (searchInput) {
+      searchInput.value = query;
+      document.dispatchEvent(new CustomEvent('codes:search', { detail: { query } }));
+    }
+  }
+</script>

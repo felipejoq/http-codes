@@ -1,17 +1,241 @@
 ---
+export const prerender = true;
 
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SearchBar from '../components/SearchBar.astro';
+import { httpCodes, categoryConfig, type HTTPCategory } from '../data/http-codes';
+
+const title = 'HTTP Echo — Complete HTTP Status Code Reference & Testing API';
+const description = 'Learn about every HTTP status code. Test any HTTP status with our free API. Fast, developer-friendly, and always available.';
+
+const stats = [
+  { label: 'Status Codes', value: httpCodes.length },
+  { label: 'Categories', value: 5 },
+  { label: 'Free API', value: '100%' },
+];
+
+const quickStartCode = `curl https://http.uncodigo.com/http/404
+
+# Or with custom options
+curl "https://http.uncodigo.com/http/200?delay=1000"`;
+
+const categories: HTTPCategory[] = ['informational', 'success', 'redirection', 'client_error', 'server_error'];
+
+// Featured codes
+const featuredCodes = [
+  httpCodes.find(c => c.code === 200),
+  httpCodes.find(c => c.code === 404),
+  httpCodes.find(c => c.code === 500),
+  httpCodes.find(c => c.code === 418),
+].filter(Boolean);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+  
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 dark:from-blue-500/10 dark:via-purple-500/10 dark:to-pink-500/10"></div>
+    
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+      <div class="text-center max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-sm font-medium mb-6">
+          <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+          API is online and free to use
+        </div>
+        
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+          HTTP Status Codes
+          <span class="block text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
+            Reference & API
+          </span>
+        </h1>
+        
+        <div class="prose dark:prose-invert prose-lg sm:prose-xl max-w-2xl mx-auto mb-10">
+          <p>
+            Complete documentation of all HTTP status codes with a free testing API.
+            Learn, test, and build with confidence.
+          </p>
+        </div>
+        
+        <!-- Search -->
+        <div class="max-w-xl mx-auto mb-8">
+          <form action="/codes" method="get">
+            <SearchBar placeholder="Search HTTP codes (e.g., 404, Not Found)..." />
+          </form>
+        </div>
+        
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a 
+            href="/codes"
+            class="w-full sm:w-auto px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
+          >
+            Browse Codes
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+          <a 
+            href="/docs"
+            class="w-full sm:w-auto px-6 py-3 border border-[var(--color-border)] hover:bg-[var(--color-card)] font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
+          >
+            API Documentation
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Categories Section -->
+  <section class="py-16 border-t border-[var(--color-border)]">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl font-bold text-center mb-12">Browse by Category</h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {categories.map(category => {
+          const config = categoryConfig[category];
+          const count = httpCodes.filter(c => c.category === category).length;
+          return (
+            <a
+              href={`/codes#${category}`}
+              class={`group p-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] hover:border-[var(--color-muted)]/50 transition-all text-center`}
+            >
+              <div class={`w-12 h-12 rounded-lg ${config.bgColor} ${config.borderColor} border flex items-center justify-center text-2xl mx-auto mb-3 group-hover:scale-110 transition-transform`}>
+                {config.icon}
+              </div>
+              <h3 class="font-semibold mb-1">{config.label}</h3>
+              <p class="text-sm text-[var(--color-muted)]">{count} codes</p>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+  
+  <!-- Quick Start Section -->
+  <section class="py-16 border-t border-[var(--color-border)] bg-[var(--color-card)]">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-3xl font-bold mb-4">Quick Start</h2>
+          <p class="text-[var(--color-muted)] mb-8">
+            Test any HTTP status code with a simple request. Our API returns the exact status code 
+            you request, along with useful metadata.
+          </p>
+          
+          <div class="space-y-4">
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm">1</div>
+              <div>
+                <h3 class="font-semibold mb-1">Make a request</h3>
+                <p class="text-sm text-[var(--color-muted)]">Use curl, HTTPie, or any HTTP client</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm">2</div>
+              <div>
+                <h3 class="font-semibold mb-1">Get the response</h3>
+                <p class="text-sm text-[var(--color-muted)]">Receive the exact status code with JSON metadata</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm">3</div>
+              <div>
+                <h3 class="font-semibold mb-1">Customize</h3>
+                <p class="text-sm text-[var(--color-muted)]">Add delays, custom headers, and more</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-8">
+            <a 
+              href="/docs"
+              class="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium hover:underline"
+            >
+              View full documentation
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="relative">
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur-2xl opacity-20"></div>
+          <div class="relative bg-[var(--color-bg)] rounded-xl border border-[var(--color-border)] overflow-hidden">
+            <div class="flex items-center gap-2 px-4 py-3 border-b border-[var(--color-border)] bg-[var(--color-card)]">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-[var(--color-muted)]">terminal</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="text-sm font-mono"><code>{quickStartCode}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Featured Codes -->
+  <section class="py-16 border-t border-[var(--color-border)]">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl font-bold">Popular Codes</h2>
+        <a href="/codes" class="text-blue-600 dark:text-blue-400 font-medium hover:underline flex items-center gap-1">
+          View all
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+      
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {featuredCodes.map(code => code && (
+          <a 
+            href={`/codes/${code.code}`}
+            class="group p-5 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] hover:border-[var(--color-muted)]/50 transition-all"
+          >
+            <div class="flex items-center gap-3 mb-2">
+              <span class={`text-2xl font-bold ${categoryConfig[code.category].color}`}>{code.code}</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-[var(--color-bg)] border border-[var(--color-border)]">
+                {categoryConfig[code.category].label}
+              </span>
+            </div>
+            <h3 class="font-semibold mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{code.name}</h3>
+            <p class="text-sm text-[var(--color-muted)] line-clamp-2">{code.description}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- Stats Section -->
+  <section class="py-16 border-t border-[var(--color-border)] bg-[var(--color-card)]">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-3 gap-8 text-center">
+        {stats.map(stat => (
+          <div>
+            <div class="text-3xl sm:text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">{stat.value}</div>
+            <div class="text-sm text-[var(--color-muted)]">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

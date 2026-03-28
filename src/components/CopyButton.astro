@@ -1,0 +1,78 @@
+---
+interface Props {
+  text: string;
+  label?: string;
+  class?: string;
+}
+
+const { text, label = 'Copy', class: className = '' } = Astro.props;
+---
+
+<button
+  type="button"
+  class={`copy-button inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] hover:bg-[var(--color-bg)] transition-colors ${className}`}
+  data-text={text}
+  aria-label={`Copy ${label}`}
+>
+  <svg class="copy-icon w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+  </svg>
+  <svg class="check-icon w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+  </svg>
+  <span class="copy-label">{label}</span>
+</button>
+
+<script>
+  function showToast(message: string) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    
+    const toast = document.createElement('div');
+    toast.className = 'toast px-4 py-3 rounded-lg bg-green-500 text-white text-sm font-medium shadow-lg flex items-center gap-2';
+    toast.innerHTML = `
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+      ${message}
+    `;
+    
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.classList.add('hiding');
+      setTimeout(() => toast.remove(), 300);
+    }, 2000);
+  }
+  
+  document.querySelectorAll('.copy-button').forEach(button => {
+    button.addEventListener('click', async () => {
+      const text = button.getAttribute('data-text');
+      if (!text) return;
+      
+      try {
+        await navigator.clipboard.writeText(text);
+        
+        // Toggle icons
+        const copyIcon = button.querySelector('.copy-icon');
+        const checkIcon = button.querySelector('.check-icon');
+        const label = button.querySelector('.copy-label');
+        
+        copyIcon?.classList.add('hidden');
+        checkIcon?.classList.remove('hidden');
+        if (label) label.textContent = 'Copied!';
+        
+        showToast('Copied to clipboard!');
+        
+        setTimeout(() => {
+          copyIcon?.classList.remove('hidden');
+          checkIcon?.classList.add('hidden');
+          if (label) label.textContent = 'Copy';
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+        showToast('Failed to copy');
+      }
+    });
+  });
+</script>
