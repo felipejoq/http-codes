@@ -96,7 +96,7 @@ All standard HTTP methods are supported:
   "request": {
     "method": "GET",
     "url": "https://http.uncodigo.com/http/404",
-    "headers": { "..." }
+    "headers": { "accept": "*/*", "host": "http.uncodigo.com" }
   }
 }
 ```
