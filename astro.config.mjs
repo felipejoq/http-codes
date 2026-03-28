@@ -8,7 +8,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  site: 'https://http.uncodigo.com',
+  site: 'https://status.uncodigo.com',
   prefetch: {
     prefetchAll: true
   }

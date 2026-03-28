@@ -16,10 +16,12 @@ const stats = [
   { label: 'Free API', value: '100%' },
 ];
 
-const quickStartCode = `curl https://http.uncodigo.com/http/404
+const siteUrl = Astro.site?.origin || '';
+
+const quickStartCode = `curl ${siteUrl}/http/404
 
 # Or with custom options
-curl "https://http.uncodigo.com/http/200?delay=1000"`;
+curl "${siteUrl}/http/200?delay=1000"`;
 
 const categories: HTTPCategory[] = ['informational', 'success', 'redirection', 'client_error', 'server_error'];
 

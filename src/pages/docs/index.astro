@@ -9,7 +9,7 @@ import CopyButton from '../../components/CopyButton.astro';
 const title = 'API Documentation | HTTP Echo';
 const description = 'Complete documentation for the HTTP Echo API. Learn how to test HTTP status codes with query parameters, custom headers, and more.';
 
-const baseUrl = 'https://http.uncodigo.com';
+const baseUrl = Astro.site?.origin || '';
 
 const endpoints = [
   {
@@ -177,7 +177,7 @@ const responseFormat = `{
   "spec": "RFC 9110, Section 15.5.5",
   "request": {
     "method": "GET",
-    "url": "https://http.uncodigo.com/http/404",
+    "url": "${baseUrl}/http/404",
     "headers": { ... }
   }
 }`;
@@ -278,9 +278,9 @@ Access-Control-Allow-Headers: *`;
           The simplest way to test the API is with curl:
         </p>
         <div class="relative">
-          <pre class="text-sm"><code>curl https://http.uncodigo.com/http/200</code></pre>
+          <pre class="text-sm"><code>curl {baseUrl}/http/200</code></pre>
           <div class="absolute top-2 right-2">
-            <CopyButton text="curl https://http.uncodigo.com/http/200" label="Copy" />
+            <CopyButton text={`curl ${baseUrl}/http/200`} label="Copy" />
           </div>
         </div>
       </div>
@@ -360,7 +360,7 @@ Content-Type: application/json
   "error": "Invalid HTTP status code",
   "message": "Code 999 is not a recognized HTTP status code",
   "valid_range": "100-599 (plus common non-standard codes)",
-  "docs": "https://http.uncodigo.com/codes"
+  "docs": "${baseUrl}/codes"
 }`}</code></pre>
       </div>
     </section>

@@ -15,7 +15,7 @@ const {
   canonical
 } = Astro.props;
 
-const siteUrl = 'https://http.uncodigo.com';
+const siteUrl = Astro.site?.origin || '';
 const canonicalUrl = canonical || `${siteUrl}${Astro.url.pathname}`;
 const fullImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
 ---

@@ -7,7 +7,7 @@
 Learn about every HTTP status code. Test any status with a single request.
 Fast, developer-friendly, and always available.
 
-[![Live Site](https://img.shields.io/badge/Live-http.uncodigo.com-blue?style=for-the-badge)](https://http.uncodigo.com)
+[![Live Site](https://img.shields.io/badge/Live-status.uncodigo.com-blue?style=for-the-badge)](https://status.uncodigo.com)
 [![Built with Astro](https://img.shields.io/badge/Astro-v6-000000?style=for-the-badge&logo=astro)](https://astro.build)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-f38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://pages.cloudflare.com)
@@ -37,19 +37,19 @@ Fast, developer-friendly, and always available.
 
 ```bash
 # Get a 200 OK
-curl https://http.uncodigo.com/http/200
+curl https://status.uncodigo.com/http/200
 
 # Test a 404 Not Found
-curl https://http.uncodigo.com/http/404
+curl https://status.uncodigo.com/http/404
 
 # Simulate a slow server (2s delay)
-curl "https://http.uncodigo.com/http/200?delay=2000"
+curl "https://status.uncodigo.com/http/200?delay=2000"
 
 # Custom redirect destination
-curl -i "https://http.uncodigo.com/http/301?redirect_to=https://example.com"
+curl -i "https://status.uncodigo.com/http/301?redirect_to=https://example.com"
 
 # Rate limit with Retry-After
-curl -i "https://http.uncodigo.com/http/429?retry_after=60"
+curl -i "https://status.uncodigo.com/http/429?retry_after=60"
 ```
 
 ---
@@ -59,7 +59,7 @@ curl -i "https://http.uncodigo.com/http/429?retry_after=60"
 ### Base URL
 
 ```
-https://http.uncodigo.com
+https://status.uncodigo.com
 ```
 
 ### Endpoints
@@ -95,8 +95,8 @@ All standard HTTP methods are supported:
   "spec": "RFC 9110, Section 15.5.5",
   "request": {
     "method": "GET",
-    "url": "https://http.uncodigo.com/http/404",
-    "headers": { "accept": "*/*", "host": "http.uncodigo.com" }
+    "url": "https://status.uncodigo.com/http/404",
+    "headers": { "accept": "*/*", "host": "status.uncodigo.com" }
   }
 }
 ```
@@ -119,7 +119,7 @@ All standard HTTP methods are supported:
 <summary><strong>JavaScript (fetch)</strong></summary>
 
 ```javascript
-const response = await fetch('https://http.uncodigo.com/http/404');
+const response = await fetch('https://status.uncodigo.com/http/404');
 console.log(response.status); // 404
 const data = await response.json();
 console.log(data);
@@ -133,7 +133,7 @@ console.log(data);
 ```python
 import requests
 
-response = requests.get('https://http.uncodigo.com/http/500')
+response = requests.get('https://status.uncodigo.com/http/500')
 print(response.status_code)  # 500
 print(response.json())
 ```
@@ -144,7 +144,7 @@ print(response.json())
 <summary><strong>Go</strong></summary>
 
 ```go
-resp, err := http.Get("https://http.uncodigo.com/http/418")
+resp, err := http.Get("https://status.uncodigo.com/http/418")
 if err != nil {
     panic(err)
 }

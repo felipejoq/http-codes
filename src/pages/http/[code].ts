@@ -5,28 +5,28 @@ export const prerender = false;
 
 const MAX_DELAY = 30000; // 30 seconds max delay
 
-export const GET: APIRoute = async ({ params, request }) => {
-  return handleRequest(params.code, request);
+export const GET: APIRoute = async ({ params, request, site }) => {
+  return handleRequest(params.code, request, site);
 };
 
-export const POST: APIRoute = async ({ params, request }) => {
-  return handleRequest(params.code, request);
+export const POST: APIRoute = async ({ params, request, site }) => {
+  return handleRequest(params.code, request, site);
 };
 
-export const PUT: APIRoute = async ({ params, request }) => {
-  return handleRequest(params.code, request);
+export const PUT: APIRoute = async ({ params, request, site }) => {
+  return handleRequest(params.code, request, site);
 };
 
-export const DELETE: APIRoute = async ({ params, request }) => {
-  return handleRequest(params.code, request);
+export const DELETE: APIRoute = async ({ params, request, site }) => {
+  return handleRequest(params.code, request, site);
 };
 
-export const PATCH: APIRoute = async ({ params, request }) => {
-  return handleRequest(params.code, request);
+export const PATCH: APIRoute = async ({ params, request, site }) => {
+  return handleRequest(params.code, request, site);
 };
 
-export const HEAD: APIRoute = async ({ params, request }) => {
-  const response = await handleRequest(params.code, request);
+export const HEAD: APIRoute = async ({ params, request, site }) => {
+  const response = await handleRequest(params.code, request, site);
   // HEAD responses must not have a body
   return new Response(null, {
     status: response.status,
@@ -34,8 +34,8 @@ export const HEAD: APIRoute = async ({ params, request }) => {
   });
 };
 
-export const OPTIONS: APIRoute = async ({ params, request }) => {
-  const response = await handleRequest(params.code, request);
+export const OPTIONS: APIRoute = async ({ params, request, site }) => {
+  const response = await handleRequest(params.code, request, site);
   
   // Add CORS headers for OPTIONS
   const headers = new Headers(response.headers);
@@ -50,17 +50,18 @@ export const OPTIONS: APIRoute = async ({ params, request }) => {
   });
 };
 
-async function handleRequest(codeParam: string | undefined, request: Request): Promise<Response> {
+async function handleRequest(codeParam: string | undefined, request: Request, site?: URL): Promise<Response> {
   const url = new URL(request.url);
+  const siteUrl = site?.origin || '';
   const code = parseInt(codeParam || '', 10);
-  
+
   // Validate code
   if (isNaN(code) || !isValidStatusCode(code)) {
     const errorBody = {
       error: 'Invalid HTTP status code',
       message: `Code ${codeParam} is not a recognized HTTP status code`,
       valid_range: '100-599 (plus common non-standard codes)',
-      docs: 'https://http.uncodigo.com/codes'
+      docs: `${siteUrl}/codes`
     };
     
     return new Response(JSON.stringify(errorBody, null, 2), {
@@ -126,7 +127,7 @@ async function handleRequest(codeParam: string | undefined, request: Request): P
   
   // Handle redirect codes
   if ((code >= 300 && code < 400) || [300, 301, 302, 303, 307, 308].includes(code)) {
-    const locationValue = redirectTo || 'https://http.uncodigo.com';
+    const locationValue = redirectTo || siteUrl;
     if (noRedirect) {
       // Return JSON with redirect info instead of actual redirect
       headers.set('X-Location', locationValue);

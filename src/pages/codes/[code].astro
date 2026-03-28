@@ -22,7 +22,8 @@ const relatedCodes = getRelatedCodes(code);
 const title = `HTTP ${code.code} — ${code.name} | HTTP Echo`;
 const description = code.description;
 
-const apiUrl = `https://http.uncodigo.com/http/${code.code}`;
+const siteUrl = Astro.site?.origin || '';
+const apiUrl = `${siteUrl}/http/${code.code}`;
 const curlExample = `curl -i ${apiUrl}`;
 ---
 

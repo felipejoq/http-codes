@@ -3,8 +3,8 @@ export const prerender = true;
 import type { APIRoute } from 'astro';
 import { httpCodes } from '../data/http-codes';
 
-export const GET: APIRoute = async () => {
-  const baseUrl = 'https://http.uncodigo.com';
+export const GET: APIRoute = async (context) => {
+  const baseUrl = context.site?.origin || '';
   const today = new Date().toISOString().split('T')[0];
   
   const staticPages = [

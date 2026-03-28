@@ -10,6 +10,7 @@ const title = '404 — Page Not Found | HTTP Echo';
 const description = 'The page you are looking for could not be found.';
 
 const code404 = getHTTPCode(404);
+const siteUrl = Astro.site?.origin || '';
 ---
 
 <BaseLayout title={title} description={description}>
@@ -52,7 +53,7 @@ const code404 = getHTTPCode(404);
     <!-- Easter Egg -->
     <div class="mt-16 p-6 rounded-xl bg-[var(--color-card)] border border-[var(--color-border)] inline-block">
       <p class="text-sm text-[var(--color-muted)] mb-2">Want to test a real 404?</p>
-      <code class="text-sm font-mono bg-[var(--color-bg)] px-3 py-1.5 rounded">curl https://http.uncodigo.com/http/404</code>
+      <code class="text-sm font-mono bg-[var(--color-bg)] px-3 py-1.5 rounded">curl {siteUrl}/http/404</code>
     </div>
   </div>
   
