@@ -3,4 +3,4 @@ compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
-SITE_URL = "https://status.uncodigo.com"
+SITE_URL = "https://codes.uncodigo.com"
