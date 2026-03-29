@@ -1,10 +1,14 @@
 import type { APIRoute } from 'astro';
 import { getHTTPCode, isValidStatusCode } from '../../data/http-codes';
+import { checkRateLimit, getClientIP } from '../../lib/rate-limit';
 
 export const prerender = false;
 
 const MAX_DELAY = 30000; // 30 seconds max delay
-const MAX_BODY_SIZE = 1024 * 1024; // 1MB max body size
+
+// Rate limit config: 100 requests per minute per IP
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 100;
 
 export const GET: APIRoute = async ({ params, request, site }) => {
   return handleRequest(params.code, request, site);
@@ -54,6 +58,40 @@ export const OPTIONS: APIRoute = async ({ params, request, site }) => {
 async function handleRequest(codeParam: string | undefined, request: Request, site?: URL): Promise<Response> {
   const url = new URL(request.url);
   const siteUrl = site?.origin || '';
+  
+  // Check rate limit first
+  const clientIP = getClientIP(request);
+  const rateLimitResult = checkRateLimit(clientIP, {
+    windowMs: RATE_LIMIT_WINDOW,
+    maxRequests: RATE_LIMIT_MAX
+  });
+  
+  // Build rate limit headers
+  const rateLimitHeaders = new Headers();
+  rateLimitHeaders.set('X-RateLimit-Limit', String(RATE_LIMIT_MAX));
+  rateLimitHeaders.set('X-RateLimit-Remaining', String(Math.max(0, rateLimitResult.remaining)));
+  rateLimitHeaders.set('X-RateLimit-Reset', String(Math.ceil(rateLimitResult.resetTime / 1000)));
+  
+  // If rate limit exceeded, return 429
+  if (!rateLimitResult.allowed) {
+    const errorBody = {
+      error: 'Rate limit exceeded',
+      message: `You have exceeded the limit of ${RATE_LIMIT_MAX} requests per minute. Please try again later.`,
+      retry_after: rateLimitResult.retryAfter,
+      limit: RATE_LIMIT_MAX,
+      window: '1 minute'
+    };
+    
+    rateLimitHeaders.set('Retry-After', String(rateLimitResult.retryAfter));
+    rateLimitHeaders.set('Content-Type', 'application/json');
+    rateLimitHeaders.set('Access-Control-Allow-Origin', '*');
+    
+    return new Response(JSON.stringify(errorBody, null, 2), {
+      status: 429,
+      headers: rateLimitHeaders
+    });
+  }
+  
   const code = parseInt(codeParam || '', 10);
 
   // Validate code
@@ -65,14 +103,14 @@ async function handleRequest(codeParam: string | undefined, request: Request, si
       docs: `${siteUrl}/codes`
     };
     
+    rateLimitHeaders.set('Content-Type', 'application/json');
+    rateLimitHeaders.set('Access-Control-Allow-Origin', '*');
+    rateLimitHeaders.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS');
+    rateLimitHeaders.set('Access-Control-Allow-Headers', '*');
+    
     return new Response(JSON.stringify(errorBody, null, 2), {
       status: 400,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS',
-        'Access-Control-Allow-Headers': '*'
-      }
+      headers: rateLimitHeaders
     });
   }
   
@@ -105,16 +143,11 @@ async function handleRequest(codeParam: string | undefined, request: Request, si
   }
   
   // Build response headers
-  const headers = new Headers();
+  const headers = new Headers(rateLimitHeaders);
   headers.set('Content-Type', contentType);
   headers.set('Access-Control-Allow-Origin', '*');
   headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS');
   headers.set('Access-Control-Allow-Headers', '*');
-  
-  // Add rate limit headers (informational - actual rate limiting should be done at edge)
-  headers.set('X-RateLimit-Limit', '1000');
-  headers.set('X-RateLimit-Remaining', '999');
-  headers.set('X-RateLimit-Reset', String(Math.ceil(Date.now() / 1000) + 3600));
   
   // Add cache headers for standard responses without customization
   const hasCustomization = customBody !== null || customHeadersJson || redirectTo !== null || retryAfter || allow || delay > 0;
@@ -194,7 +227,7 @@ async function handleRequest(codeParam: string | undefined, request: Request, si
   }
   
   // Build response body
-  let body: string | null = null;
+  let body: string | null;
   
   if (customBody !== null) {
     // Custom body requested via query param

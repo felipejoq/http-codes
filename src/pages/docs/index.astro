@@ -58,27 +58,33 @@ const queryParams = [
   },
   {
     name: 'body',
-    type: 'string',
-    description: 'Custom response body',
-    example: '/http/200?body=Hello+World'
+    type: 'string (URL-encoded)',
+    description: 'Custom response body. Must be URL-encoded for special characters, spaces, and JSON',
+    example: '/http/200?body=Hello%20World'
   },
   {
     name: 'content_type',
     type: 'string',
-    description: 'Custom Content-Type header',
+    description: 'Custom Content-Type header (default: application/json)',
     example: '/http/200?content_type=text/plain'
   },
   {
     name: 'headers',
-    type: 'JSON',
-    description: 'Additional response headers as JSON object',
-    example: '/http/200?headers={"X-Custom":"value"}'
+    type: 'JSON (URL-encoded)',
+    description: 'Additional response headers as URL-encoded JSON object',
+    example: '/http/200?headers=%7B%22X-Custom%22%3A%22value%22%7D'
   },
   {
     name: 'redirect_to',
     type: 'string (URL)',
-    description: 'Destination URL for 3xx redirects',
-    example: '/http/301?redirect_to=https://example.com'
+    description: 'Destination URL for 3xx redirects. URL-encode for external URLs',
+    example: '/http/301?redirect_to=https%3A%2F%2Fexample.com'
+  },
+  {
+    name: 'no_redirect',
+    type: 'boolean (flag)',
+    description: 'For 3xx codes: return 200 with redirect info instead of actual redirect',
+    example: '/http/302?redirect_to=/path&no_redirect'
   },
   {
     name: 'retry_after',
@@ -101,17 +107,41 @@ const examples = [
     code: `# Get a 200 OK response
 curl -i ${baseUrl}/http/200
 
-# Simulate a slow server
+# Simulate a slow server (5 second delay)
 curl -i "${baseUrl}/http/200?delay=5000"
 
 # Test rate limiting with retry info
 curl -i "${baseUrl}/http/429?retry_after=60"
 
-# Custom redirect
-curl -i "${baseUrl}/http/301?redirect_to=https://example.com"
+# === CUSTOM BODY EXAMPLES ===
 
-# Custom response body
-curl -i "${baseUrl}/http/200?content_type=text/plain&body=Custom+response"`
+# 1. Custom plain text body
+curl "${baseUrl}/http/200?body=Hello%20World"
+
+# 2. Custom JSON body (URL-encoded)
+curl "${baseUrl}/http/200?body=%7B%22message%22%3A%22Hello%22%2C%22status%22%3A%22ok%22%7D&content_type=application/json"
+
+# 3. Custom HTML body (URL-encoded)
+curl "${baseUrl}/http/200?body=%3Ch1%3EHello%20World%3C%2Fh1%3E&content_type=text/html"
+
+# 7. 404 with custom error message
+curl "${baseUrl}/http/404?body=Resource%20not%20found"
+
+# === REDIRECT EXAMPLES ===
+
+# 4. 302 Redirect to external URL (shows headers only)
+curl -I "${baseUrl}/http/302?redirect_to=https%3A%2F%2Fexample.com"
+
+# 8. 301 Redirect to local path
+curl -I "${baseUrl}/http/301?redirect_to=%2Fcodes%2F200"
+
+# 5. View redirect info without following (useful for testing)
+curl "${baseUrl}/http/302?redirect_to=https%3A%2F%2Fexample.com&no_redirect"
+
+# === CUSTOM HEADERS ===
+
+# 6. Add custom response headers (JSON, URL-encoded)
+curl "${baseUrl}/http/200?headers=%7B%22X-Custom-Header%22%3A%22my-value%22%2C%22X-Request-ID%22%3A%22123abc%22%7D"`
   },
   {
     name: 'JavaScript (fetch)',
