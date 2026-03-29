@@ -13,5 +13,11 @@ export default defineConfig({
   site: 'https://http.uncodigo.com',
   prefetch: {
     prefetchAll: true
+  },
+  session: {
+    driver: 'fs-lite',
+    options: {
+      base: './.sessions'
+    }
   }
 });
