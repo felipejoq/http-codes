@@ -4,6 +4,7 @@ import { getHTTPCode, isValidStatusCode } from '../../data/http-codes';
 export const prerender = false;
 
 const MAX_DELAY = 30000; // 30 seconds max delay
+const MAX_BODY_SIZE = 1024 * 1024; // 1MB max body size
 
 export const GET: APIRoute = async ({ params, request, site }) => {
   return handleRequest(params.code, request, site);
@@ -83,10 +84,17 @@ async function handleRequest(codeParam: string | undefined, request: Request, si
     MAX_DELAY
   );
   
-  const customBody = url.searchParams.get('body');
+  // Get custom body from query param (URL decoded)
+  const bodyParam = url.searchParams.get('body');
+  const customBody = bodyParam !== null ? decodeURIComponent(bodyParam) : null;
+  
   const contentType = url.searchParams.get('content_type') || 'application/json';
   const customHeadersJson = url.searchParams.get('headers');
-  const redirectTo = url.searchParams.get('redirect_to');
+  
+  // Get redirect URL (URL decoded to support full URLs)
+  const redirectParam = url.searchParams.get('redirect_to');
+  const redirectTo = redirectParam !== null ? decodeURIComponent(redirectParam) : null;
+  
   const noRedirect = url.searchParams.has('no_redirect');
   const retryAfter = url.searchParams.get('retry_after');
   const allow = url.searchParams.get('allow');
@@ -109,7 +117,7 @@ async function handleRequest(codeParam: string | undefined, request: Request, si
   headers.set('X-RateLimit-Reset', String(Math.ceil(Date.now() / 1000) + 3600));
   
   // Add cache headers for standard responses without customization
-  const hasCustomization = customBody || customHeadersJson || redirectTo || retryAfter || allow || delay > 0;
+  const hasCustomization = customBody !== null || customHeadersJson || redirectTo !== null || retryAfter || allow || delay > 0;
   if (!hasCustomization) {
     headers.set('Cache-Control', 'public, max-age=3600');
   } else {
@@ -125,14 +133,26 @@ async function handleRequest(codeParam: string | undefined, request: Request, si
     }
   }
   
-  // Handle redirect codes
-  if ((code >= 300 && code < 400) || [300, 301, 302, 303, 307, 308].includes(code)) {
-    const locationValue = redirectTo || siteUrl;
+  // Handle redirect codes (3xx)
+  if (code >= 300 && code < 400) {
+    // Use redirect_to parameter, or fallback to site URL
+    const locationValue = redirectTo || siteUrl || '/';
+    
     if (noRedirect) {
       // Return JSON with redirect info instead of actual redirect
       headers.set('X-Location', locationValue);
-    } else if (!headers.has('Location')) {
+      headers.set('X-Redirect-Status', String(code));
+    } else {
+      // Perform actual redirect
       headers.set('Location', locationValue);
+      
+      // For 3xx responses, we typically don't want a body, but if user specified one, include it
+      if (customBody !== null) {
+        return new Response(customBody, { status: code, headers });
+      }
+      
+      // Standard redirect response
+      return new Response(null, { status: code, headers });
     }
   }
   
@@ -164,7 +184,7 @@ async function handleRequest(codeParam: string | undefined, request: Request, si
   // Parse custom headers
   if (customHeadersJson) {
     try {
-      const customHeaders = JSON.parse(customHeadersJson);
+      const customHeaders = JSON.parse(decodeURIComponent(customHeadersJson));
       for (const [key, value] of Object.entries(customHeaders)) {
         headers.set(key, String(value));
       }
@@ -174,11 +194,23 @@ async function handleRequest(codeParam: string | undefined, request: Request, si
   }
   
   // Build response body
-  let body: string;
+  let body: string | null = null;
   
   if (customBody !== null) {
-    // Custom body requested
+    // Custom body requested via query param
     body = customBody;
+  } else if (noRedirect && code >= 300 && code < 400) {
+    // no_redirect mode for 3xx - return JSON with redirect info
+    const responseBody: Record<string, unknown> = {
+      code: httpCode?.code || code,
+      name: httpCode?.name || 'Unknown',
+      description: httpCode?.description || '',
+      redirect: {
+        location: redirectTo || siteUrl || '/',
+        would_redirect_to: redirectTo || siteUrl || '/'
+      }
+    };
+    body = JSON.stringify(responseBody, null, 2);
   } else if (httpCode?.apiResponse?.defaultBody !== undefined) {
     // Use code-specific default body (e.g., empty for 444)
     body = httpCode.apiResponse.defaultBody;
