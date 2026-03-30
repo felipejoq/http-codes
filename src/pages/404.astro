@@ -17,8 +17,8 @@ const siteUrl = Astro.site?.origin || '';
   <Header slot="header" />
   
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 text-center">
-    <div class="w-32 h-32 rounded-2xl bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 flex items-center justify-center mx-auto mb-8">
-      <span class="text-6xl font-bold text-orange-600 dark:text-orange-400">404</span>
+    <div class="w-32 h-32 rounded-2xl bg-orange-100 dark:bg-orange-950/30 border border-orange-300 dark:border-orange-800 flex items-center justify-center mx-auto mb-8">
+      <span class="text-6xl font-bold text-orange-700 dark:text-orange-400">404</span>
     </div>
     
     <h1 class="text-4xl font-bold mb-4">Page Not Found</h1>
@@ -41,7 +41,7 @@ const siteUrl = Astro.site?.origin || '';
       </a>
       <a 
         href="/codes"
-        class="px-6 py-3 border border-[var(--color-border)] hover:bg-[var(--color-card)] font-medium rounded-xl transition-colors flex items-center gap-2"
+        class="px-6 py-3 border border-(--color-border) hover:bg-(--color-card) font-medium rounded-xl transition-colors flex items-center gap-2"
       >
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -51,9 +51,9 @@ const siteUrl = Astro.site?.origin || '';
     </div>
     
     <!-- Easter Egg -->
-    <div class="mt-16 p-6 rounded-xl bg-[var(--color-card)] border border-[var(--color-border)] inline-block">
-      <p class="text-sm text-[var(--color-muted)] mb-2">Want to test a real 404?</p>
-      <code class="text-sm font-mono bg-[var(--color-bg)] px-3 py-1.5 rounded">curl {siteUrl}/http/404</code>
+    <div class="mt-16 p-6 rounded-xl bg-(--color-card) border border-(--color-border) inline-block">
+      <p class="text-sm text-(--color-muted) mb-2">Want to test a real 404?</p>
+      <code class="text-sm font-mono bg-(--color-code-bg) px-3 py-1.5 rounded">curl {siteUrl}/http/404</code>
     </div>
   </div>
   

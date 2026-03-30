@@ -32,16 +32,16 @@ const curlExample = `curl -i ${apiUrl}`;
   
   <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
     <!-- Breadcrumbs -->
-    <nav class="flex items-center gap-2 text-sm text-[var(--color-muted)] mb-6">
-      <a href="/" class="hover:text-[var(--color-text)] transition-colors">Home</a>
+    <nav class="flex items-center gap-2 text-sm text-(--color-muted) mb-6">
+      <a href="/" class="hover:text-(--color-text) transition-colors">Home</a>
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>
-      <a href="/codes" class="hover:text-[var(--color-text)] transition-colors">Codes</a>
+      <a href="/codes" class="hover:text-(--color-text) transition-colors">Codes</a>
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>
-      <span class="text-[var(--color-text)]">{code.code}</span>
+      <span class="text-(--color-text)">{code.code}</span>
     </nav>
     
     <!-- Header -->
@@ -60,7 +60,7 @@ const curlExample = `curl -i ${apiUrl}`;
                 href={code.specUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-xs px-2 py-1 rounded-full bg-[var(--color-card)] border border-[var(--color-border)] text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors flex items-center gap-1"
+                class="text-xs px-2 py-1 rounded-full bg-(--color-card) border border-(--color-border) text-(--color-muted) hover:text-(--color-text) transition-colors flex items-center gap-1"
               >
                 {code.spec}
                 <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -80,7 +80,7 @@ const curlExample = `curl -i ${apiUrl}`;
     </div>
     
     <!-- Common Use -->
-    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 mb-8">
+    <div class="rounded-xl border border-(--color-border) bg-(--color-card) shadow-sm dark:shadow-none p-6 mb-8">
       <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
         <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -93,7 +93,7 @@ const curlExample = `curl -i ${apiUrl}`;
     </div>
     
     <!-- API Section -->
-    <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 mb-8">
+    <div class="rounded-xl border border-(--color-border) bg-(--color-card) shadow-sm dark:shadow-none p-6 mb-8">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-semibold flex items-center gap-2">
           <svg class="w-5 h-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -104,11 +104,11 @@ const curlExample = `curl -i ${apiUrl}`;
         <CopyButton text={apiUrl} label="Copy URL" />
       </div>
       
-      <div class="bg-[var(--color-bg)] rounded-lg p-4 border border-[var(--color-border)] mb-4 overflow-x-auto">
+      <div class="bg-(--color-code-bg) rounded-lg p-4 border border-(--color-border) mb-4 overflow-x-auto">
         <code class="text-sm font-mono">{apiUrl}</code>
       </div>
       
-      <h3 class="text-sm font-medium text-[var(--color-muted)] uppercase tracking-wider mb-2">Example with curl</h3>
+      <h3 class="text-sm font-medium text-(--color-muted) uppercase tracking-wider mb-2">Example with curl</h3>
       <div class="relative">
         <pre class="text-sm"><code>{curlExample}</code></pre>
         <div class="absolute top-2 right-2">
@@ -124,7 +124,7 @@ const curlExample = `curl -i ${apiUrl}`;
     
     <!-- Example -->
     {code.example && (
-      <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 mb-8">
+      <div class="rounded-xl border border-(--color-border) bg-(--color-card) shadow-sm dark:shadow-none p-6 mb-8">
         <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
           <svg class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -134,11 +134,11 @@ const curlExample = `curl -i ${apiUrl}`;
         
         <div class="space-y-4">
           <div>
-            <h3 class="text-xs font-medium text-[var(--color-muted)] uppercase tracking-wider mb-2">Request</h3>
+            <h3 class="text-xs font-medium text-(--color-muted) uppercase tracking-wider mb-2">Request</h3>
             <pre class="text-sm"><code>{code.example.request}</code></pre>
           </div>
           <div>
-            <h3 class="text-xs font-medium text-[var(--color-muted)] uppercase tracking-wider mb-2">Response</h3>
+            <h3 class="text-xs font-medium text-(--color-muted) uppercase tracking-wider mb-2">Response</h3>
             <pre class="text-sm"><code>{code.example.response}</code></pre>
           </div>
         </div>
@@ -147,7 +147,7 @@ const curlExample = `curl -i ${apiUrl}`;
     
     <!-- Headers -->
     {code.headers && code.headers.length > 0 && (
-      <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 mb-8">
+      <div class="rounded-xl border border-(--color-border) bg-(--color-card) shadow-sm dark:shadow-none p-6 mb-8">
         <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
           <svg class="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -157,10 +157,10 @@ const curlExample = `curl -i ${apiUrl}`;
         
         <div class="space-y-4 prose dark:prose-invert prose-sm max-w-none">
           {code.headers.map(header => (
-            <div class="border border-[var(--color-border)] rounded-lg p-4 not-prose">
+            <div class="border border-(--color-border) rounded-lg p-4 not-prose">
               <code class="text-sm font-mono font-semibold text-blue-600 dark:text-blue-400">{header.name}</code>
-              <p class="text-sm text-[var(--color-muted)] mt-1">{header.description}</p>
-              <div class="mt-2 bg-[var(--color-bg)] rounded px-3 py-2">
+              <p class="text-sm text-(--color-muted) mt-1">{header.description}</p>
+              <div class="mt-2 bg-(--color-code-bg) rounded px-3 py-2">
                 <code class="text-xs font-mono">{header.example}</code>
               </div>
             </div>
@@ -171,7 +171,7 @@ const curlExample = `curl -i ${apiUrl}`;
     
     <!-- Related Codes -->
     {relatedCodes.length > 0 && (
-      <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-6">
+      <div class="rounded-xl border border-(--color-border) bg-(--color-card) shadow-sm dark:shadow-none p-6">
         <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
           <svg class="w-5 h-5 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
@@ -186,7 +186,7 @@ const curlExample = `curl -i ${apiUrl}`;
               class={`px-4 py-2 rounded-lg ${categoryConfig[related.category].bgColor} ${categoryConfig[related.category].borderColor} border hover:opacity-80 transition-opacity`}
             >
               <span class={`font-bold ${categoryConfig[related.category].color}`}>{related.code}</span>
-              <span class="text-sm text-[var(--color-muted)] ml-2">{related.name}</span>
+              <span class="text-sm text-(--color-muted) ml-2">{related.name}</span>
             </a>
           ))}
         </div>

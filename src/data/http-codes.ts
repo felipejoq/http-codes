@@ -27,37 +27,37 @@ export interface HTTPCode {
 export const categoryConfig: Record<HTTPCategory, { label: string; color: string; bgColor: string; borderColor: string; icon: string }> = {
   informational: {
     label: 'Informational',
-    color: 'text-cyan-600 dark:text-cyan-400',
-    bgColor: 'bg-cyan-50 dark:bg-cyan-950/30',
-    borderColor: 'border-cyan-200 dark:border-cyan-800',
+    color: 'text-cyan-800 dark:text-cyan-400',
+    bgColor: 'bg-cyan-200 dark:bg-cyan-950/30',
+    borderColor: 'border-cyan-400 dark:border-cyan-800',
     icon: 'ℹ️'
   },
   success: {
     label: 'Success',
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-50 dark:bg-emerald-950/30',
-    borderColor: 'border-emerald-200 dark:border-emerald-800',
+    color: 'text-emerald-800 dark:text-emerald-400',
+    bgColor: 'bg-emerald-200 dark:bg-emerald-950/30',
+    borderColor: 'border-emerald-400 dark:border-emerald-800',
     icon: '✅'
   },
   redirection: {
     label: 'Redirection',
-    color: 'text-amber-600 dark:text-amber-400',
-    bgColor: 'bg-amber-50 dark:bg-amber-950/30',
-    borderColor: 'border-amber-200 dark:border-amber-800',
+    color: 'text-amber-800 dark:text-amber-400',
+    bgColor: 'bg-amber-200 dark:bg-amber-950/30',
+    borderColor: 'border-amber-400 dark:border-amber-800',
     icon: '↪️'
   },
   client_error: {
     label: 'Client Error',
-    color: 'text-orange-600 dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/30',
-    borderColor: 'border-orange-200 dark:border-orange-800',
+    color: 'text-orange-800 dark:text-orange-400',
+    bgColor: 'bg-orange-200 dark:bg-orange-950/30',
+    borderColor: 'border-orange-400 dark:border-orange-800',
     icon: '⚠️'
   },
   server_error: {
     label: 'Server Error',
-    color: 'text-red-600 dark:text-red-400',
-    bgColor: 'bg-red-50 dark:bg-red-950/30',
-    borderColor: 'border-red-200 dark:border-red-800',
+    color: 'text-red-800 dark:text-red-400',
+    bgColor: 'bg-red-200 dark:bg-red-950/30',
+    borderColor: 'border-red-400 dark:border-red-800',
     icon: '🔥'
   }
 };

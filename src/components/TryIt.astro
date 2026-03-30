@@ -8,8 +8,8 @@ interface Props {
 const { code } = Astro.props;
 ---
 
-<div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] overflow-hidden">
-  <div class="px-5 py-4 border-b border-[var(--color-border)] flex items-center justify-between">
+<div class="rounded-xl border border-(--color-border) bg-(--color-card) shadow-sm dark:shadow-none overflow-hidden">
+  <div class="px-5 py-4 border-b border-(--color-border) flex items-center justify-between">
     <h3 class="font-semibold flex items-center gap-2">
       <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -31,9 +31,9 @@ const { code } = Astro.props;
   <div class="p-5 space-y-4">
     <!-- URL Display -->
     <div>
-      <label class="text-xs font-medium text-[var(--color-muted)] uppercase tracking-wider mb-2 block">Request URL</label>
+      <label class="text-xs font-medium text-(--color-muted) uppercase tracking-wider mb-2 block">Request URL</label>
       <div class="flex items-center gap-2">
-        <code class="flex-1 px-3 py-2 bg-[var(--color-bg)] rounded-lg text-sm font-mono border border-[var(--color-border)] overflow-x-auto">
+        <code class="flex-1 px-3 py-2 bg-(--color-code-bg) rounded-lg text-sm font-mono border border-(--color-border) overflow-x-auto">
           GET /http/{code.code}
         </code>
       </div>
@@ -41,9 +41,9 @@ const { code } = Astro.props;
     
     <!-- Response -->
     <div>
-      <label class="text-xs font-medium text-[var(--color-muted)] uppercase tracking-wider mb-2 block">Response</label>
+      <label class="text-xs font-medium text-(--color-muted) uppercase tracking-wider mb-2 block">Response</label>
       <div id="try-it-response" class="relative">
-        <pre class="text-sm font-mono text-[var(--color-muted)]">Click "Send Request" to see the response...</pre>
+        <pre class="text-sm font-mono text-(--color-muted)">Click "Send Request" to see the response...</pre>
       </div>
     </div>
   </div>

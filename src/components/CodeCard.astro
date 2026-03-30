@@ -12,7 +12,7 @@ const config = categoryConfig[code.category];
 
 <a 
   href={`/codes/${code.code}`}
-  class="code-card block rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 hover:border-[var(--color-muted)]/50"
+  class="code-card block rounded-xl border border-(--color-border) bg-(--color-card) p-5 hover:border-(--color-border)"
 >
   <div class="flex items-start gap-4">
     <div class={`flex-shrink-0 w-16 h-16 rounded-lg ${config.bgColor} ${config.borderColor} border flex items-center justify-center`}>
@@ -26,7 +26,7 @@ const config = categoryConfig[code.category];
         </span>
       </div>
       {showDescription && (
-        <p class="text-sm text-[var(--color-muted)] line-clamp-2">{code.description}</p>
+        <p class="text-sm text-(--color-muted) line-clamp-2">{code.description}</p>
       )}
     </div>
   </div>

@@ -10,7 +10,7 @@ const { text, label = 'Copy', class: className = '' } = Astro.props;
 
 <button
   type="button"
-  class={`copy-button inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] hover:bg-[var(--color-bg)] transition-colors ${className}`}
+  class={`copy-button inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border border-(--color-border) bg-(--color-code-bg) hover:bg-(--color-card) transition-colors ${className}`}
   data-text={text}
   aria-label={`Copy ${label}`}
 >

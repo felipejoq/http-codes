@@ -1,12 +1,32 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --color-bg: #ffffff;
-  --color-text: #1a1a1a;
-  --color-muted: #6b7280;
-  --color-border: #e5e7eb;
-  --color-card: #f9fafb;
+  --color-bg: #e8edf4;
+  --color-text: #0f172a;
+  --color-muted: #3d4f6b;
+  --color-border: #b0bdd4;
+  --color-card: #ffffff;
+  --color-code-bg: #dde4ef;
+
+  /* Override Tailwind Typography prose variables for light mode */
+  --tw-prose-body: #1e293b;
+  --tw-prose-headings: #0f172a;
+  --tw-prose-lead: #334155;
+  --tw-prose-links: #1d4ed8;
+  --tw-prose-bold: #0f172a;
+  --tw-prose-counters: #475569;
+  --tw-prose-bullets: #64748b;
+  --tw-prose-hr: #cbd5e1;
+  --tw-prose-quotes: #0f172a;
+  --tw-prose-quote-borders: #cbd5e1;
+  --tw-prose-captions: #475569;
+  --tw-prose-code: #0f172a;
+  --tw-prose-pre-code: #0f172a;
+  --tw-prose-pre-bg: #dde4ef;
+  --tw-prose-th-borders: #b0bdd4;
+  --tw-prose-td-borders: #dde4ef;
 }
 
 .dark {
@@ -15,6 +35,7 @@
   --color-muted: #9ca3af;
   --color-border: #374151;
   --color-card: #1a1a1a;
+  --color-code-bg: #141414;
 }
 
 * {
@@ -50,18 +71,44 @@ body {
   background: var(--color-muted);
 }
 
-/* Syntax highlighting base styles */
+/* Syntax highlighting base styles — override Tailwind Typography defaults */
 pre {
-  background: var(--color-card) !important;
-  border: 1px solid var(--color-border);
+  background: var(--color-code-bg) !important;
+  color: var(--color-text) !important;
+  border: 1px solid var(--color-border) !important;
   border-radius: 0.5rem;
   padding: 1rem;
   overflow-x: auto;
 }
 
+/* pre > code must not fight the prose plugin */
+pre code {
+  color: inherit !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  font-size: inherit !important;
+}
+
 code {
   font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, monospace;
   font-size: 0.875rem;
+}
+
+/* Inline code (not inside pre) in prose — ensure readable contrast in light mode */
+:not(pre) > code {
+  color: var(--color-text) !important;
+  background: var(--color-code-bg) !important;
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.85em;
+}
+
+/* In prose, disable the default backtick ::before/::after that typography adds */
+:not(pre) > code::before,
+:not(pre) > code::after {
+  content: none !important;
 }
 
 /* Focus styles for accessibility */
@@ -102,11 +149,29 @@ code {
 /* Card hover effects */
 .code-card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+.dark .code-card {
+  box-shadow: none;
 }
 
 .code-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dark .code-card:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+}
+
+/* Light mode: all card-like sections get a shadow */
+:root .shadow-card {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.dark .shadow-card {
+  box-shadow: none;
 }
 
 /* Search input styles */
