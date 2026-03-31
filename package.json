@@ -10,17 +10,17 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "start": "HOST=0.0.0.0 PORT=3000 node ./dist/server/entry.mjs",
+    "start": "wrangler pages dev ./dist",
     "wrangler": "wrangler"
   },
   "dependencies": {
-    "@astrojs/node": "^10.0.4",
+    "@astrojs/cloudflare": "^13.1.6",
     "@tailwindcss/typography": "^0.5.19",
     "astro": "^6.1.1",
     "tailwindcss": "^4.0.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",
-    "wrangler": "^3.99.0"
+    "wrangler": "^4.79.0"
   }
 }

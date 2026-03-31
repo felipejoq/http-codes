@@ -1,11 +1,13 @@
 import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
+import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   output: 'server',
-  adapter: node({
-    mode: 'standalone'
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true
+    }
   }),
   vite: {
     plugins: [tailwindcss()],
@@ -13,11 +15,5 @@ export default defineConfig({
   site: 'https://http.uncodigo.com',
   prefetch: {
     prefetchAll: true
-  },
-  session: {
-    driver: 'fs-lite',
-    options: {
-      base: './.sessions'
-    }
   }
 });

@@ -22,23 +22,22 @@ const DEFAULT_CONFIG: RateLimitConfig = {
 // In-memory store: Map<ip, RateLimitEntry>
 const store = new Map<string, RateLimitEntry>();
 
-// Cleanup old entries every 5 minutes
-const CLEANUP_INTERVAL = 5 * 60 * 1000;
-
-setInterval(() => {
-  const now = Date.now();
+// Lazy cleanup: remove expired entries on each check to avoid setInterval
+// (not compatible with Cloudflare Workers runtime)
+function cleanupExpired(now: number): void {
   for (const [ip, entry] of store.entries()) {
     if (now > entry.resetTime) {
       store.delete(ip);
     }
   }
-}, CLEANUP_INTERVAL);
+}
 
 export function checkRateLimit(
   identifier: string,
   config: Partial<RateLimitConfig> = {}
 ): { allowed: boolean; remaining: number; resetTime: number; retryAfter?: number } {
   const now = Date.now();
+  cleanupExpired(now);
   const { windowMs, maxRequests } = { ...DEFAULT_CONFIG, ...config };
   
   const entry = store.get(identifier);
